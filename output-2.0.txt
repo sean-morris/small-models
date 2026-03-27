@@ -1,0 +1,11 @@
+Temperature: 2.0
+
+Model: qwen2.5-1.5b-instruct-q4_k_m.gguf
+
+When white sunlight passes through the Earth's atmosphere, the shorter
+ violet and blue wavelengths of light are scattered more due to the ga
+s molecules and particulates in the atmosphere. These scattered partic
+les in the sky, which are generally blue, absorb some of the scattered
+ light as well, which leads to an overall effect of blue sky color. Ad
+ditionally, since the human eye perceives colors based on the amount o
+f scattered

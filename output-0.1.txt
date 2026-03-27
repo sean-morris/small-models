@@ -1,0 +1,11 @@
+Temperature: 0.1
+
+Model: qwen2.5-1.5b-instruct-q4_k_m.gguf
+
+The sky appears blue because of a phenomenon called Rayleigh scatterin
+g. When sunlight enters the Earth's atmosphere, it encounters gas mole
+cules and dust particles. These particles scatter the shorter blue lig
+ht waves more than the longer red light waves. This causes the blue li
+ght to be scattered in all directions, making the sky appear blue. Add
+itionally, the atmosphere's composition changes with altitude, causing
+ the blue light to scatter more

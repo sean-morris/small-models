@@ -1,0 +1,9 @@
+Temperature: 1.0
+
+Model: qwen2.5-1.5b-instruct-q4_k_m.gguf
+
+When light travels from the sun to the Earth, it is refracted through 
+the atmosphere, causing blue light to be scattered more than other col
+ors. As the light reaches the Earth, we see the scattered blue light a
+nd perceive it as the sky being blue. This is a phenomenon known as Ra
+yleigh scattering.

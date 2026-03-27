@@ -1,0 +1,11 @@
+Temperature: 0.5
+
+Model: qwen2.5-1.5b-instruct-q4_k_m.gguf
+
+The sky appears blue because of Rayleigh scattering. When sunlight ent
+ers the Earth's atmosphere, it encounters the molecules of air. Blue l
+ight has a shorter wavelength than other colors of light, and it is sc
+attered more easily by the air molecules. This scattering causes the b
+lue light to be scattered in all directions, making the sky appear blu
+e to our eyes. Additionally, the scattering of blue light is more effe
+ctive

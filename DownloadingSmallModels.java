@@ -37,18 +37,25 @@ public class DownloadingSmallModels {
         System.out.println("Download folder: " + folder + "\n");
 
         // Model 1: OLMo 1B
-        downloadModel(
-            "nopperl/OLMo-1B-GGUF",
-            "OLMo-1B.Q4_K_M.gguf",
-            "OLMo 1B (4-bit)",
-            folder
-        );
+        // downloadModel(
+        //     "nopperl/OLMo-1B-GGUF",
+        //     "OLMo-1B.Q4_K_M.gguf",
+        //     "OLMo 1B (4-bit)",
+        //     folder
+        // );
 
         // Model 2: Qwen 2.5 1.5B
+        // downloadModel(
+        //     "Qwen/Qwen2.5-1.5B-Instruct-GGUF",
+        //     "qwen2.5-1.5b-instruct-q4_k_m.gguf",
+        //     "Qwen 2.5 1.5B Instruct (4-bit)",
+        //     folder
+        // );
+
         downloadModel(
-            "Qwen/Qwen2.5-1.5B-Instruct-GGUF",
-            "qwen2.5-1.5b-instruct-q4_k_m.gguf",
-            "Qwen 2.5 1.5B Instruct (4-bit)",
+            "HauhauCS/Qwen3.5-2B-Uncensored-HauhauCS-Aggressive",
+            "Qwen3.5-2B-Uncensored-HauhauCS-Aggressive-BF16.gguf",
+            "Qwen3.5-2B-Uncensored-HauhauCS-Aggressive",
             folder
         );
 

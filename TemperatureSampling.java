@@ -20,32 +20,32 @@ import java.nio.file.*;
  * cd tools/llama.cpp
  * 
  * # download prebuilt Ubuntu x64 release archive
- * curl -L https://github.com/ggml-org/llama.cpp/releases/download/b8514/llama-b8514-bin-ubuntu-x64.tar.gz -o llama-prebuilt.tar.gz
+ * curl -L https://github.com/ggml-org/llama.cpp/releases/download/b8522/llama-b8522-bin-macos-arm64.tar.gz -o llama-prebuilt.tar.gz
  * tar -xzf llama-prebuilt.tar.gz
  *
  * # verify binaries exist
- * ./llama-b8514/llama-cli --help
- * ./llama-b8514/llama-server --help
+ * ./llama-b8522/llama-cli --help
+ * ./llama-b8522/llama-server --help
  */
 public class TemperatureSampling {
 
     // Model GGUF files (relative to download dir)
     private final String[][] models = {
-        // { subdirectory, gguf filename, friendly name }
-        { "nopperl__OLMo-1B-GGUF",              "OLMo-1B.Q4_K_M.gguf",                "OLMo 1B" },
-        { "Qwen__Qwen2.5-1.5B-Instruct-GGUF",   "qwen2.5-1.5b-instruct-q4_k_m.gguf",  "Qwen 2.5 1.5B Instruct" },
+        //{ subdirectory, gguf filename, friendly name }
+        { "", "OLMo-1B.Q4_K_M.gguf", "OLMo 1B" },
+        { "", "qwen2.5-1.5b-instruct-q4_k_m.gguf", "Qwen 2.5 1.5B Instruct" }
     };
 
-    private final double[] temperatures = {0.1, 0.5, 0.9, 1.5};
+    private final double[] temperatures = {0.1, 0.5, 1.0, 2};
     private final int maxTokens = 80;
-    private final int serverPort = 8090;
+    private final int serverPort = 8000;
     private final String serverUrl = "http://127.0.0.1:" + serverPort;
 
     private final String prompt =
             "Explain why the sky is blue in one paragraph:";
 
     // Path to the locally downloaded llama-server binary
-    private final String llamaServerBin = "tools/llama.cpp/llama-b8514/llama-server";
+    private final String llamaServerBin = "tools/llama.cpp/llama-b8522/llama-server";
 
     private final HttpClient httpClient;
     private final String modelsDir;
@@ -63,51 +63,52 @@ public class TemperatureSampling {
     }
 
     // Runs the full experiment from start to finish
+    // Step 1: Make this only process one model
+    // Step 2: Make it set the temperature manually
+    // Step 3: Write the output to a file so you can read it.
     public void run() throws Exception {
         System.out.println("==================================================");
         System.out.println("  Exercise 02 - Temperature & Sampling (Local)");
         System.out.println("==================================================\n");
-
-        checkLlamaServer();
 
         Path basePath = Paths.get(modelsDir).toAbsolutePath();
         System.out.println("Models dir : " + basePath);
         System.out.println("Prompt     : \"" + prompt + "\"");
         System.out.println("Max tokens : " + maxTokens + "\n");
 
-        for (String[] model : models) {
-            Path ggufPath = basePath.resolve(model[0]).resolve(model[1]);
-            String friendlyName = model[2];
+        
+        String[] model = models[1];
+        Path ggufPath = basePath.resolve(model[0]).resolve(model[1]);
+        String friendlyName = model[2];
 
-            System.out.println("--------------------------------------------------");
-            System.out.println("  Model: " + friendlyName);
-            System.out.println("  File : " + ggufPath.getFileName());
-            System.out.println("--------------------------------------------------\n");
+        System.out.println("--------------------------------------------------");
+        System.out.println("  Model: " + friendlyName);
+        System.out.println("  File : " + ggufPath.getFileName());
+        System.out.println("--------------------------------------------------\n");
 
-            if (!Files.exists(ggufPath)) {
-                System.out.println("  GGUF file not found: " + ggufPath);
-                System.out.println("  Run Exercise01 first to download the models.\n");
-                continue;
-            }
 
-            // Start llama-server for this model
-            Process server = startServer(ggufPath);
-            try {
-                waitForServer();
+        // Start llama-server for this model
+        Process server = startServer(ggufPath);
+        try {
+            waitForServer();
 
-                for (double temp : temperatures) {
-                    System.out.printf("-- temperature = %.1f --%n", temp);
-                    try {
-                        String output = generate(prompt, temp, maxTokens);
-                        System.out.println(output.strip());
-                    } catch (Exception e) {
-                        System.out.println("  Error: " + e.getMessage());
-                    }
-                    System.out.println();
+            for(double temp:temperatures){
+                System.out.printf("-- temperature = %.1f --%n", temp);
+                String msg = "Temperature: " + temp + "\n";
+                msg += "Model: " + model[1] + "\n"; 
+                try {
+                    String output = generate(prompt, temp, maxTokens);
+                    System.out.println(output.strip());
+                    msg += output.strip();
+                    msg = msg.replaceAll(String.format("(.{1,%d})", 70), "$1\n");
+                    Files.writeString(Path.of("output-" + temp + ".txt"), msg);
+                } catch (Exception e) {
+                    System.out.println("  Error: " + e.getMessage());
                 }
-            } finally {
-                stopServer(server);
+                System.out.println();
             }
+        } finally {
+            stopServer(server);
         }
 
         System.out.println("Observation: lower temperatures produce more predictable text,");
@@ -229,7 +230,6 @@ public class TemperatureSampling {
                 .replace("\t", "\\t");
     }
 
-    // Checks that the local llama-server binary exists before running
 
     private void checkLlamaServer() {
         if (!java.nio.file.Files.exists(java.nio.file.Paths.get(llamaServerBin))) {
